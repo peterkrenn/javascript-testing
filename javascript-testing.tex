@@ -1,0 +1,64 @@
+% !TEX TS-program = xelatex
+% !TEX encoding = UTF-8
+
+\documentclass[10pt, a4paper]{article}
+
+\usepackage{xltxtra} % loads fontspec and xunicode
+
+\defaultfontfeatures{Mapping = tex-text, Scale = MatchLowercase}
+\setmainfont{Adobe Garamond Pro}
+\setsansfont{Helvetica}
+\setmonofont{Bitstream Vera Sans Mono}
+
+\usepackage{polyglossia}
+\setdefaultlanguage{german}
+
+\usepackage{minted}
+
+\setlength\parindent{0mm}
+\setlength\parskip{2mm}
+
+\usepackage{url}
+
+\usepackage{color}
+
+\usepackage[pdfborder={0 0 0 0}]{hyperref}
+
+\title{JavaScript Testing}
+\author{Peter Krenn}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Zusammenfassung
+\end{abstract}
+
+\tableofcontents
+
+\section{Einleitung}
+
+\section{QUnit}
+
+\emph{QUnit}\cite{zaefferer_qunit_2011} ist Teil des \emph{jQuery}
+Projektes\cite{resig_jquery_2011} und wird bei diesem auch als \emph{test
+framework} eingesetzt. Es ist einem Design nachempfunden, dass ursprünglich als
+\emph{SUnit}\cite{beck_simple_1994} für \emph{Smalltalk} entwickelt wurde und als \emph{jUnit} für
+\emph{Java} große Verbreitung fand. Allgemein nennt man diese Gruppe
+\emph{xUnit test frameworks}\cite{fowler_xunit_2010}.
+
+\begin{minted}[gobble = 2]{ruby}
+  class Asdf < Peter
+    def asdf(asdf)
+      13 + 12
+    end
+  end
+\end{minted}
+
+\begin{flushleft}
+  \bibliography{javascript-testing}
+  \bibliographystyle{plain}
+\end{flushleft}
+
+\end{document}
