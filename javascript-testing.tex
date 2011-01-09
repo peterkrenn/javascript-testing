@@ -1,7 +1,7 @@
 % !TEX TS-program = xelatex
 % !TEX encoding = UTF-8
 
-\documentclass[10pt, a4paper]{article}
+\documentclass[11pt, a4paper]{article}
 
 \usepackage{xltxtra} % loads fontspec and xunicode
 
@@ -14,6 +14,7 @@
 \setdefaultlanguage{german}
 
 \usepackage{minted}
+\definecolor{minted-bg}{rgb}{0.95, 0.95, 0.95}
 
 \setlength\parindent{0mm}
 \setlength\parskip{2mm}
@@ -24,7 +25,7 @@
 
 \usepackage[pdfborder={0 0 0 0}]{hyperref}
 
-\title{JavaScript Testing}
+\title{Unit-Tests für JavaScript und AJAX}
 \author{Peter Krenn}
 
 \begin{document}
@@ -41,21 +42,167 @@ Zusammenfassung
 
 \section{QUnit}
 
-\emph{QUnit}\cite{zaefferer_qunit_2011} ist Teil des \emph{jQuery}
-Projektes\cite{resig_jquery_2011} und wird bei diesem auch als \emph{test
-framework} eingesetzt. Es ist einem Design nachempfunden, dass ursprünglich als
-\emph{SUnit}\cite{beck_simple_1994} für \emph{Smalltalk} entwickelt wurde und als \emph{jUnit} für
-\emph{Java} große Verbreitung fand. Allgemein nennt man diese Gruppe
-\emph{xUnit test frameworks}\cite{fowler_xunit_2010}.
+\emph{QUnit}\cite{zaefferer_qunit_2011} wird von Mitgliedern des \emph{jQuery}
+Teams\cite{resig_jquery_2011} entwickelt und ist auch die offizielle
+\emph{test suite} des \emph{jQuery} Projektes. Es zählt zur Gruppe der
+\emph{xUnit test frameworks}\cite{fowler_xunit_2010}, die einem Design folgen,
+das erstmals mit \emph{SUnit}\cite{beck_simple_1994} für \emph{Smalltalk} formuliert
+wurde und als \emph{JUnit} für \emph{Java} große Verbreitung fand.
 
-\begin{minted}[gobble = 2]{ruby}
-  class Asdf < Peter
-    def asdf(asdf)
-      13 + 12
-    end
-  end
+\subsection{Assertions}
+
+Der zentrale Bestandteil eines \emph{unit tests} ist die \emph{assertion}. Eine
+\emph{assertion} ist eine Aussage über den Zustand einer bestimmten Stelle in
+einem Programm\cite{wikipedia_assertion_2011}. Der Entwickler macht eine
+Zusicherung, dass eine bestimmte Bedingung unabhänging von den Laufzeitumständen
+immer wahr ist.
+
+\emph{QUnit} stellt eine Reihe von allgemeinen \emph{assertions} zur Verfügung,
+die \emph{JUnit} nachempfunden sind, und auch solche, die speziell an JavaScript
+und asynchrone Entwicklung angepasst sind\cite{zaefferer_qunit_2011}:
+
+\subsubsection*{\texttt{ok(state, message)}}
+
+\texttt{ok()} ist eine boolsche \emph{assertion}, die positiv terminiert, wenn der
+erste Parameter wahr ist. Den zweiten, optionalen Parameter \texttt{message} haben alle
+\emph{assertion}-Funktionen gemein: dieser wird gemeinsam mit dem Ergebnis
+ausgegeben.
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+  ok(true, "terminiert immer positiv");
+  ok("", "Ein leerer string entspricht false, die assertion schlägt fehl");
 \end{minted}
 
+\subsubsection*{\texttt{equal(actual, expecteded, message)}}
+
+Diese \emph{assertion} ist \texttt{ok()} sehr ähnlich, allerdings werden die
+\texttt{actual} und \texttt{expecteded} Werte mit dem Ergebnis ausgegeben. Dadurch
+werden die Tests aussagekräftiger und \emph{debugging} einfacher.
+\texttt{equal} terminiert positiv, wenn \texttt{actual == expecteded}. 
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+  var actual = 1;
+  equal(actual + 1, 2, "terminiert positiv");
+  equal(actual, 2, "schlägt fehl");
+\end{minted}
+
+\subsubsection*{\texttt{strictEqual(actual, expected, message)}}
+
+Im Gegensatz zu \texttt{equal()} werden bei dieser \emph{assertion} die Werte
+mit \texttt{actual === expecteded} verglichen. Dieser Operator vergleicht
+zusätzlich die Typengleichheit der beiden Parameter.
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+  var actual = 0;
+  equal(actual, false, "terminiert positiv, da == den Datentyp ignoriert");
+  strictEqual(actual, false, "schlägt fehl, da 0 Number und false boolean ist");
+\end{minted}
+
+\subsubsection*{\texttt{deepEqual(actual, expected, message)}}
+
+\texttt{deepEqual()} überprüft primitve Datentypen, \emph{arrays} und Objekte
+rekursiv auf Gleichheit. Sie ist dabei auch strikter als \texttt{equal()}, da
+der \texttt{===} Operator verwendet wird.
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+  var actual = {a: 1};
+  equal(actual, {a: 1}, "schlägt mit verschiedenen Objekten fehl");
+  deepEqual(actual, {a: "1"}, "schlägt fehl, da die Datentypen verschieden sind");
+  deepEqual(actual, {a: 1}, "terminiert positiv, da die Inhalte der Objekte
+  gleich sind");
+\end{minted}
+
+\subsubsection*{\texttt{notEqual(actual, expected, message)}}
+
+Diese \emph{assertion} ist die invertierte Version von \texttt{equal()}.
+Entsprechende Funktionen existieren auch für \texttt{strictEqual()} und
+\texttt{deepEqual()}: \texttt{notStrictEqual()} und \texttt{notDeepEqual}.
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+  var actual = 0;
+  notEqual(actual, false, "schlägt fehl");
+  notStrictEqual(actual, false, "terminiert positiv");
+
+  var actual = {a: 1};
+  notDeepEqual(actual, {a: "1"}, "terminiert positiv");
+\end{minted}
+
+\subsubsection*{\texttt{raises(state, message}}
+
+\texttt{raises()} überprüft, ob die übergebene \emph{callback} Funktion eine
+\emph{exception} wirft. Die Funktion wird ohne Parameter im \emph{default scope}
+aufgerufen.
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+  raises(function() {
+    throw new Error("Fehlerfall");
+  }, "terminiert positiv, falls der gewünschte Fehler auftritt");
+\end{minted}
+
+\subsection{Testfunktionen}
+
+Werden die vorgestellten \emph{assertions} direkt ausgeführt, unterbrechen sie
+im Falle eines Fehlers den Testdurchlauf. Deswegen werden sie in Testfunktionen
+eingebettet.
+
+Es ist auch üblich, dass jede Testfunktion nur eine spezifische Eigenschaft
+testet. Dies geschieht oft mit mehreren \emph{assertions} und die Testfälle
+bleiben dabei überschaubar und einfach zu verstehen.
+
+\emph{QUnit} macht das mit der Funktion \texttt{test(name, expected, test)}.
+\texttt{name} ist eine Bezeichnung des Tests und \texttt{test} ist eine
+Funktion, die die \emph{assertions} enthällt. \texttt{expect} ist optional und
+erlaubt es die Anzahl der zu erwartenden \emph{assertions} festzulegen. Dies ist
+bei asynchronen Tests von Bedeutung.
+
+\subsection{Test Suites}
+
+Mit der \texttt{module(name, lifecycle)} Anweisung ist es möglich, die Testfälle
+weiter in Module aufzuteilen. Dies dient einerseits der Strukturierung der Tests
+und andererseits wird es auch möglich, für mehrere Testfälle relevante Daten vor
+deren Ausführung zu definieren.
+
+Im Parameter \texttt{lifecycle} kann man optional die Funktionen
+\texttt{setup()} und \texttt{tearDown()} übergeben, die vor beziehungsweise nach
+jedem Test ausgeführt werden. Sie teilen den \texttt{this}-\emph{scope} der
+Testfunktionen, wodurch sogenannte \emph{fixtures} erstellt werden können. Die
+Daten werden nach jedem Test zurückgesetzt, was in \texttt{tearDown()} auch
+manuell geschehen kann.
+
+Es stellt die Dateien \texttt{qunit.js} und \texttt{qunit.css} zur Verfügung,
+die gemeinsam mit dem zu testenden JavaScript Code und den Tests in eine
+HTML-Datei eingebunden werden müssen.
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{html}
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <script type="text/javascript" src="qunit.js"></script>
+      <link rel="stylesheet" href="qunit.css" type="text/css" media="screen" />
+
+      <!-- project file -->
+      <script type="text/javascript" src="my_project.js"></script>
+
+      <!-- tests file -->
+      <script type="text/javascript" src="my_tests.js"></script>
+    </head>
+    <body>
+      <h1 id="qunit-header">QUnit example</h1>
+      <h2 id="qunit-banner"></h2>
+      <div id="qunit-testrunner-toolbar"></div>
+      <h2 id="qunit-userAgent"></h2>
+      <ol id="qunit-tests"></ol>
+      <div id="qunit-fixture">test markup, will be hidden</div>
+    </body>
+  </html>
+\end{minted}
+
+Zum Ausführen der Tests muss diese Datei dann in einem Web-Browser geöffnet
+werden. \emph{QUnit} befüllt die Elemente im \texttt{body} mit den Ergebnissen
+der Tests.
+
+Wie auch bei anderen \emph{xUnit test frameworks} sind die zentralen Elemente
+eines \emph{QUnit} Tests die \emph{assertions}.
 \begin{flushleft}
   \bibliography{javascript-testing}
   \bibliographystyle{plain}
