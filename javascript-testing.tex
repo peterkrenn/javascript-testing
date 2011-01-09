@@ -14,7 +14,7 @@
 \setdefaultlanguage{german}
 
 \usepackage{minted}
-\definecolor{minted-bg}{rgb}{0.95, 0.95, 0.95}
+\definecolor{minted-bg}{rgb}{0.98, 0.98, 0.98}
 
 \setlength\parindent{0mm}
 \setlength\parskip{2mm}
@@ -42,12 +42,12 @@ Zusammenfassung
 
 \section{QUnit}
 
-\emph{QUnit}\cite{zaefferer_qunit_2011} wird von Mitgliedern des \emph{jQuery}
+QUnit\cite{zaefferer_qunit_2011} wird von Mitgliedern des jQuery
 Teams\cite{resig_jquery_2011} entwickelt und ist auch die offizielle
-\emph{test suite} des \emph{jQuery} Projektes. Es zählt zur Gruppe der
-\emph{xUnit test frameworks}\cite{fowler_xunit_2010}, die einem Design folgen,
-das erstmals mit \emph{SUnit}\cite{beck_simple_1994} für \emph{Smalltalk} formuliert
-wurde und als \emph{JUnit} für \emph{Java} große Verbreitung fand.
+\emph{test suite} des jQuery Projektes. Es zählt zur Gruppe der
+xUnit test frameworks\cite{fowler_xunit_2010}, die einem Design folgen,
+das erstmals mit SUnit\cite{beck_simple_1994} für Smalltalk formuliert
+wurde und als JUnit für Java große Verbreitung fand.
 
 \subsection{Assertions}
 
@@ -57,8 +57,8 @@ einem Programm\cite{wikipedia_assertion_2011}. Der Entwickler macht eine
 Zusicherung, dass eine bestimmte Bedingung unabhänging von den Laufzeitumständen
 immer wahr ist.
 
-\emph{QUnit} stellt eine Reihe von allgemeinen \emph{assertions} zur Verfügung,
-die \emph{JUnit} nachempfunden sind, und auch solche, die speziell an JavaScript
+QUnit stellt eine Reihe von allgemeinen \emph{assertions} zur Verfügung,
+die JUnit nachempfunden sind, und auch solche, die speziell an JavaScript
 und asynchrone Entwicklung angepasst sind\cite{zaefferer_qunit_2011}:
 
 \subsubsection*{\texttt{ok(state, message)}}
@@ -66,11 +66,12 @@ und asynchrone Entwicklung angepasst sind\cite{zaefferer_qunit_2011}:
 \texttt{ok()} ist eine boolsche \emph{assertion}, die positiv terminiert, wenn der
 erste Parameter wahr ist. Den zweiten, optionalen Parameter \texttt{message} haben alle
 \emph{assertion}-Funktionen gemein: dieser wird gemeinsam mit dem Ergebnis
-ausgegeben.
+ausgegeben\footnote{Die QUnit Beispiel sind inspiriert von
+\cite{zaefferer_qunit_2011} und \cite{huang_how_2010}.}.
 
 \begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
   ok(true, "terminiert immer positiv");
-  ok("", "Ein leerer string entspricht false, die assertion schlägt fehl");
+  ok("", "Leerstring entspricht false, die assertion schlägt fehl");
 \end{minted}
 
 \subsubsection*{\texttt{equal(actual, expecteded, message)}}
@@ -94,8 +95,12 @@ zusätzlich die Typengleichheit der beiden Parameter.
 
 \begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
   var actual = 0;
-  equal(actual, false, "terminiert positiv, da == den Datentyp ignoriert");
-  strictEqual(actual, false, "schlägt fehl, da 0 Number und false boolean ist");
+
+  // terminiert positiv, da == den Datentyp ignoriert
+  equal(actual, false);
+
+  // schlägt fehl, da 0 vom Typ Number und false Boolean ist
+  strictEqual(actual, false);
 \end{minted}
 
 \subsubsection*{\texttt{deepEqual(actual, expected, message)}}
@@ -106,10 +111,15 @@ der \texttt{===} Operator verwendet wird.
 
 \begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
   var actual = {a: 1};
-  equal(actual, {a: 1}, "schlägt mit verschiedenen Objekten fehl");
-  deepEqual(actual, {a: "1"}, "schlägt fehl, da die Datentypen verschieden sind");
-  deepEqual(actual, {a: 1}, "terminiert positiv, da die Inhalte der Objekte
-  gleich sind");
+
+  // equal schlägt mit verschiedenen Objekten fehl
+  equal(actual, {a: 1});
+
+  // schlägt fehl, da die Datentypen verschieden sind;
+  deepEqual(actual, {a: "1"});
+
+  // terminiert positiv, da die Inhalte der Objekte gleich sind
+  deepEqual(actual, {a: 1}
 \end{minted}
 
 \subsubsection*{\texttt{notEqual(actual, expected, message)}}
@@ -127,7 +137,7 @@ Entsprechende Funktionen existieren auch für \texttt{strictEqual()} und
   notDeepEqual(actual, {a: "1"}, "terminiert positiv");
 \end{minted}
 
-\subsubsection*{\texttt{raises(state, message}}
+\subsubsection*{\texttt{raises(state, message)}}
 
 \texttt{raises()} überprüft, ob die übergebene \emph{callback} Funktion eine
 \emph{exception} wirft. Die Funktion wird ohne Parameter im \emph{default scope}
@@ -149,11 +159,15 @@ Es ist auch üblich, dass jede Testfunktion nur eine spezifische Eigenschaft
 testet. Dies geschieht oft mit mehreren \emph{assertions} und die Testfälle
 bleiben dabei überschaubar und einfach zu verstehen.
 
-\emph{QUnit} macht das mit der Funktion \texttt{test(name, expected, test)}.
+QUnit macht das mit der Funktion \texttt{test(name, expected, test)}.
 \texttt{name} ist eine Bezeichnung des Tests und \texttt{test} ist eine
 Funktion, die die \emph{assertions} enthällt. \texttt{expect} ist optional und
 erlaubt es die Anzahl der zu erwartenden \emph{assertions} festzulegen. Dies ist
 bei asynchronen Tests von Bedeutung.
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+  Beispiel
+\end{minted}
 
 \subsection{Test Suites}
 
@@ -162,6 +176,10 @@ weiter in Module aufzuteilen. Dies dient einerseits der Strukturierung der Tests
 und andererseits wird es auch möglich, für mehrere Testfälle relevante Daten vor
 deren Ausführung zu definieren.
 
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+  Beispiel
+\end{minted}
+
 Im Parameter \texttt{lifecycle} kann man optional die Funktionen
 \texttt{setup()} und \texttt{tearDown()} übergeben, die vor beziehungsweise nach
 jedem Test ausgeführt werden. Sie teilen den \texttt{this}-\emph{scope} der
@@ -169,16 +187,108 @@ Testfunktionen, wodurch sogenannte \emph{fixtures} erstellt werden können. Die
 Daten werden nach jedem Test zurückgesetzt, was in \texttt{tearDown()} auch
 manuell geschehen kann.
 
-Es stellt die Dateien \texttt{qunit.js} und \texttt{qunit.css} zur Verfügung,
-die gemeinsam mit dem zu testenden JavaScript Code und den Tests in eine
-HTML-Datei eingebunden werden müssen.
+\subsection{Asynchrones Testen}
+
+Asynchrone Funktionen, wie sie bei \emph{AJAX requests} und Aufrufen von
+\texttt{setTimeout()} und \texttt{setInterval()} vorkommen, können mit den
+bisher vorgestellten Methoden nicht getestet werden.
+
+Im folgenden Beispiel\cite{huang_how_2010} wird die \emph{assertion} nicht ausgeführt, da das
+Ergebnis des Testfalles zum Zeitpunkt des Aufrufens bereits feststeht.
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+  test("Asynchroner Test", function() {
+    setTimeout(function() {
+      ok(true);
+    }, 100)
+  });
+\end{minted}
+
+QUnit stellt aus diesem Grund zwei Funktionen zur Verfügung, mit der
+sich der Testablauf pausieren und fortsetzen lässt.
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+  test("Asynchroner Test", function() {
+    stop();
+
+    setTimeout(function() {
+      ok(true);
+
+      start();
+    }, 100)
+  })
+\end{minted}
+
+\texttt{stop()} hält den Test an und nach Aufrufen der \emph{assertion}, wird
+mit \texttt{start()} wieder fortgesetzt. Da der Fall, dass \texttt{stop()} am
+Anfang eines Tests ausgeführt wird, häufig vorkommt, gibt es dafür auch ein
+spezielle Funktion names \texttt{asyncTest()}.
+
+Wird nicht ein \texttt{setTimeout()} Aufruf sondern ein AJAX request
+getestet, bei dem man sich nicht sicher sein kann, wann und ob die
+\emph{callback} Funktion ausgeführt wird, ist es möglich der \texttt{stop()}
+Funktion ein Intervall als Paramter mitzugeben, nachdem der Testablauf
+automatisch fortgesetzt wird. Der betreffende Test schlägt dabei fehl.
+
+Werden in einem Testfall mehrere zeitverzögerte Aufrufe getestet, ist es
+notwendig, \texttt{start()} manuell mit \texttt{setTimout()} ausreichend zu
+verzögern, so dass alle \emph{callbacks} ausreichend Zeit zum Terminieren haben.
+
+Um sicher zu stellen, dass alle \emph{callbacks} mit den enthaltenen
+\emph{assertions} ausgeführt werden, gibt es eine \texttt{expect()} Funktion,
+der man als Parameter die zu erwartende Anzahl der \emph{assertions} übergeben
+kann.
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+  // Ein AJAX request mit der zu testenden callback Funktion
+  function ajaxCall(successCallback) {
+    jQuery.ajax({
+      url: "http://server.com/",
+      success: successCallback
+    });
+  }
+
+  asyncTest("Asynchroner Test", function() {
+    // asyncTest unterbricht den Testablauf
+
+    // 3 assertions sollten ausgeführt werden
+    expect(3);
+
+    ajaxCall(function() {
+      ok(true);
+    });
+
+    ajax(function() {
+      ok(true);
+      ok(true);
+    })
+
+    // Nach 3000 ms wird der Testablauf fortgesetzt
+    setTimeout(function() {
+      start();
+    }, 3000);
+  });
+\end{minted}
+
+Die Kombination von \texttt{expect()} mit \texttt{asyncTest()} ist wiederum so
+verbreitet, dass die Anzahl der zu erwartenden \emph{assertions} als zweiter
+Parameter direkt in den \texttt{asyncTest()} Aufruf verlegt werden kann.
+
+JQuery stellt dafür die Methoden \texttt{stop()} und \texttt{start()}
+
+\subsection{Testablauf}
+
+Die Ausgabe von QUnit erfolgt ausschließlich im Web-Browser. Die Dateien
+\texttt{qunit.js} und \texttt{qunit.css} müssen gemeinsam mit dem zu testenden
+JavaScript Code und den Tests in eine HTML-Datei eingebunden werden.
 
 \begin{minted}[gobble = 2, bgcolor = minted-bg]{html}
   <!DOCTYPE html>
   <html lang="en">
     <head>
       <script type="text/javascript" src="qunit.js"></script>
-      <link rel="stylesheet" href="qunit.css" type="text/css" media="screen" />
+      <link rel="stylesheet" href="qunit.css" type="text/css"
+            media="screen" />
 
       <!-- project file -->
       <script type="text/javascript" src="my_project.js"></script>
@@ -197,12 +307,48 @@ HTML-Datei eingebunden werden müssen.
   </html>
 \end{minted}
 
-Zum Ausführen der Tests muss diese Datei dann in einem Web-Browser geöffnet
-werden. \emph{QUnit} befüllt die Elemente im \texttt{body} mit den Ergebnissen
-der Tests.
+Beim Ausführen der Datei im Web-Browser befüllt QUnit die Elemente im
+\texttt{body} mit den Ergebnissen der Tests.
 
-Wie auch bei anderen \emph{xUnit test frameworks} sind die zentralen Elemente
-eines \emph{QUnit} Tests die \emph{assertions}.
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+SCREENSHOT
+\end{minted}
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+Mehr schreiben
+\end{minted}
+
+\section{Regression Testing}
+
+Regression Testing\cite{wikipedia_regression_2011} versucht Probleme und
+Nebenwirkungen von Modifikationen im Quellcode durch Wiederholung der Testfälle
+aufzuzeigen. Ein verwandter Begriff ist Continuous
+Integration\cite{wikipedia_continuous_2011}, die kontinuierliche
+Qualitätskontrolle für ein Projekt erreichen will. Automatisiertes Testing ist
+eines ihrer Ziele.
+
+Da es keine einheitliche JavaScript Implementierung gibt, sondern
+diese sich je nach Browser, Browserversion und Betriebssystem unterscheiden, ist
+die Durchführung der Testläufe problematisch.
+
+Ein Ansatz der sich derzeit in Entwicklung befindet ist
+TestSwarm\cite{resig_testswarm_2011} von John Resig, dem Autor von jQuery und
+QUnit. Es handelt sich dabei um ein System, das den Code eines Projektes bei
+jedem \emph{commit} im Versionierungssystem automatisch auf verschiedenen
+Plattformen und Browsern testet.
+
+Das System wird von einem zentralen Server aus gesteuert, der Testaufträge an
+mehrere Clients, auf denen verschiedene Browserversionen laufen, weiterleitet.
+Das Ergebnis der Prozesses ist eine tabellarische Ansicht die für jeden
+\emph{commit} darstellt, auf welchen Plattformen und Browsern die Test Suite
+fehlerfrei angewendet worden ist.
+
+Im Gegensatz zu vergleichbaren Systemen, wie
+Selenium\cite{selenium_selenium_2011}, ist TestSwarm vom verwendeten Test
+Framework unabhängig: es werden alle im Moment gebräuchlichen Frameworks
+unterstützt.
+
+
 \begin{flushleft}
   \bibliography{javascript-testing}
   \bibliographystyle{plain}
