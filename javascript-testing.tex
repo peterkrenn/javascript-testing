@@ -14,6 +14,8 @@
 % \setdefaultlanguage{austrian}
 \setdefaultlanguage{german}
 
+\usepackage{graphicx}
+
 \usepackage{minted}
 \definecolor{minted-bg}{rgb}{0.98, 0.98, 0.98}
 
@@ -41,6 +43,45 @@ Zusammenfassung
 
 \section{Einleitung}
 
+Laut einer Umfrage\cite{young_dailyjs_2010} testen nur 34\% der Entwickler ihren
+JavaScript Code. Im Vergleich zur vorjährigen Version der
+Umfrage\cite{young_dailyjs_2009} gab es nur eine Verbesserung um 2\%. Trotzdem
+existiert eine Vielzahl von JavaScript Testing Frameworks.
+
+Die verbreitetsten Open Source JavaScript Frameworks und Libraries, wie zum
+Beispiel jQuery\cite{resig_jquery_2011},
+Prototype/Scriptaculous\cite{prototype_js_prototype_2011},
+MooTools\cite{mootools_mootools_2011} oder YUI\cite{yahoo_inc._yui_2011-1}
+verfügen alle über umfassende Test Suites.
+
+Die von den JavaScript Frameworks verwendeten Test Frameworks sind auch die
+am meisten eingesetzten: QUnit\cite{zaefferer_qunit_2011} (jQuery) 34\%,
+Jasmine\cite{jasmine_jasmine_2011} (MooTools) 18\%,
+YUITest\cite{yahoo_inc._yui_2011} (YUI) 6\%,
+unittest.js\cite{fuchs_unittest.js_2011} (Prototype) 5\%.
+
+Verbreitet ist weiterhin JsUnit\cite{jsunit_jsunit_2011} mit 12\%. Dieses
+Framework war das erste JavaScript Unit Testing Framework und die Entwicklung
+daran begann 2001, wurde aber mittlerweile eingestellt.
+
+Neben Browser-basiertem Testen gewinnt Server-seitiges Testen an Bedeutung,
+bereits 35\% der Entwickler verwenden JavaScript in einer Server Umgebung.
+Node.js beinhaltet eine Implementierung der CommonJS Assertion Testing
+Spezifikation\cite{node.js_node.js_2011}.
+
+Ebenfalls für Server-seitiges Testen relevant sind Headless Testing Frameworks,
+wie zum Beispiel Jasmine. Sie sind nicht vom DOM-Modell des Browsers oder
+anderen Frameworks abhängig und können auch von der Kommandozeile aus aufgerufen
+werden.
+
+Auch Mocking und Stubbing Libraries wurden für JavaScript entwickelt.
+Zum Beispiel Sinon.JS\cite{johansen_sinon.js_2011} funktioniert mit jedem Unit
+Testing Framework und erlaubt es verschiedene Arten von Test Doubles und Fake
+XHR Requests zu erzeugen.
+
+Der weitere Artikel wird sich vor Allem mit der Anwendung von QUnit und Jasmine
+beschäftigen.
+
 \section{QUnit}
 
 QUnit\cite{zaefferer_qunit_2011} wird von Mitgliedern des jQuery
@@ -48,7 +89,7 @@ Teams\cite{resig_jquery_2011} entwickelt und ist auch die offizielle
 \emph{test suite} des jQuery Projektes. Es zählt zur Gruppe der
 xUnit Test Frameworks\cite{fowler_xunit_2010}, die einem Design folgen,
 das erstmals mit SUnit\cite{beck_simple_1994} für Smalltalk formuliert
-wurde und als JUnit für Java große Verbreitung fand.
+wurde und als JUnit\cite{gamma_junit_2011} für Java große Verbreitung fand.
 
 \subsection{Assertions}
 
@@ -105,7 +146,7 @@ zusätzlich die Typengleichheit der beiden Parameter.
 
 \subsubsection*{\texttt{deepEqual(actual, expected, message)}}
 
-\texttt{deepEqual()} überprüft primitve Datentypen, \emph{arrays} und Objekte
+\texttt{deepEqual()} überprüft primitve Datentypen, Arrays und Objekte
 rekursiv auf Gleichheit. Sie ist dabei auch strikter als \texttt{equal()}, da
 der \texttt{===} Operator verwendet wird.
 
@@ -278,7 +319,7 @@ JQuery stellt dafür die Methoden \texttt{stop()} und \texttt{start()}
 
 \subsection{Testablauf}
 
-Die Ausgabe von QUnit erfolgt ausschließlich im Web-Browser. Die Dateien
+Die Ausgabe von QUnit erfolgt ausschließlich im Browser. Die Dateien
 \texttt{qunit.js} und \texttt{qunit.css} müssen gemeinsam mit dem zu testenden
 JavaScript Code und den Tests in eine HTML-Datei eingebunden werden.
 
@@ -307,20 +348,22 @@ JavaScript Code und den Tests in eine HTML-Datei eingebunden werden.
   </html>
 \end{minted}
 
-Beim Ausführen der Datei im Web-Browser befüllt QUnit die Elemente im
+Beim Ausführen der Datei im Browser befüllt QUnit die Elemente im
 \texttt{body} mit den Ergebnissen der Tests.
 
-\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
-SCREENSHOT
-\end{minted}
+\begin{center}
+  \includegraphics[width = 1\textwidth]{QUnit.png}
+\end{center}
 
-\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
-Mehr schreiben
-\end{minted}
+Für jeden Testfall wird die Anzahl der erfolgreichen und fehlgeschlagenen
+\emph{assertions} und auch deren Gesamtanzahl angegeben. Für fehlgeschlagene
+Tests wird dessen Position im Quellcode angezeigt.
 
-\subsection{Headless Testing}
-
-\subsection{Continuouse Integration}
+QUnit ist nur für die Verwendung im Browser ausgelegt, ein
+Kommandozeilen-basierter Aufruf der Testfälle ist nicht vorgesehen. Ein
+Versuch\cite{plee_qunit_2010} QUnit in der simulierten Browserumgebung
+Env.js\cite{resig_envjs_2011} anzuwenden, war nur begrenzt erfolgreich, da der
+Testbericht im HTML-Format ausgegeben wird.
 
 \section{Jasmine}
 
@@ -342,26 +385,17 @@ vereinfacht den automatisierten Aufruf der Tests und ermöglicht es Server-side
 Anwendungen zu testen. Wie QUnit unterstützt es asynchrones Testen und verfügt
 außerdem über Mocking und Stubbing Funktionalitäten.
 
-\subsection{Specs}
+\subsection{Specs, Expectations und Suites}
 
 Specs entsprechen den Testfunktionen von klassischen xUnit Test Frameworks. Sie
 beschreiben das Verhalten einer Funktion oder eines Objektes mit einem Aufruf
 der Funktion \texttt{it()} in Form einer natürlichen Sprache. Die Beschreibung
-sollte aussagekräftig sein, da sie im Test Bericht ausgegeben wird.
-
-\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
-  it("should increment a variable", function() {
-    var value = 0;
-    value++;
-  });
-\end{minted}
-
-\subsection{Expectations}
+sollte aussagekräftig sein, da sie im Testbericht ausgegeben wird.
 
 Expectations drücken die Erwartungen an das Verhalten eines bestimmten Teils des
 Quellcodes mittels der \texttt{expect()} Funktion aus. Sie sind vergleichbar mit
-den \emph{assertions} der xUnit Frameworks. Das Verhalten wird durch Matchers
-spezifiziert.
+den \emph{assertions} der xUnit Frameworks. Das gewünschte Verhalten wird durch
+Matchers wie \texttt{toEqual} spezifiziert:
 
 \begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
   it("should increment a variable", function() {
@@ -373,6 +407,29 @@ spezifiziert.
 
     // Testen der Erwartung
     expect(value).toEqual(1);
+  });
+\end{minted}
+
+Zur Strukturierung der Specs dienen Suites. Wie bei QUnit ist es möglich,
+Anweisungen vor und nach dem Aufrufen jedes Tests auszuführen -- dies geschieht
+mit \texttt{beforeEach()} und \texttt{afterEach()}.
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+  describe("Calculator", function() {
+    var a, b;
+
+    beforeEach(function() {
+      a = 3;
+      b = 4;
+    });
+
+    it("should add numbers with add()", function() {
+      expect(Calculator.add(a, b)).toEqual(7);
+    });
+
+    it("should multiply numbers with multiply()", function() {
+      expect(Calculator.multiply(a, b)).toEqual(12);
+    });
   });
 \end{minted}
 
@@ -419,6 +476,192 @@ kann außerdem Datumswerte und DOM-Nodes vergleichen.
   expect(c).toBe(b);
 \end{minted}
 
+\subsubsection*{\texttt{toMatch()}}
+
+\texttt{toMatch()} überprüft Strings auf Übereinstimmungen mit Regulären
+Ausdrücken.
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+  expect("javascript").toMatch(/script/);
+  expect("javascript").not.toMatch(/testing/);
+\end{minted}
+
+\subsubsection*{\texttt{toBeDefined()}}
+
+\texttt{toBeDefined()} terminiert positiv für definierte Werte.
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+  var a = 5;
+
+  expect(a).toBeDefined();
+
+  expect(undefined).not.toBeDefined();
+\end{minted}
+
+\subsubsection*{\texttt{toBeNull()}}
+
+\texttt{toBeNull()} erwartet einen \texttt{null}-Wert.
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+  expect(null).toBeNull();
+  expect(undefined).not.toBeNull();
+\end{minted}
+
+\subsubsection*{\texttt{toBeTruthy()} und \texttt{toBeFalsy()}}
+
+Diese Matchers überprüfen, ob ein Ausdruck in \texttt{true} beziehungsweise
+\texttt{false} evaluiert.
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+  expect(0).not.toBeTruthy();
+  expect("").toBeFalsy();
+  expect(5).toBeTruthy();
+  expect({a: 1}).not.toBeFalsy();
+\end{minted}
+
+\subsubsection*{\texttt{toContain()}}
+
+\texttt{toContain()} terminiert positiv, falls der übergebene String oder Array
+ein bestimmtes Zeichen oder Element enthält.
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+  expect("javascript").toContain("a");
+  expect("javascript").not.toContain("x");
+
+  expect([1, 2, 3]).toContain(3);
+  expect([1, 2, 3]).not.toContain("x");
+\end{minted}
+
+\subsubsection*{\texttt{toBeLessThan()} und \texttt{toBeGreaterThan()}}
+
+Diese Matchers überprüfen, ob ein Wert kleiner beziehungsweise größer als der
+Übergebene ist.
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+  expect(5).toBeLessThan(10);
+  expect(5).not.toBeGreaterThan(10);
+\end{minted}
+
+\subsubsection*{\texttt{toThrow()}}
+
+Mit \texttt{toThrow()} drückt man die Erwartung aus, dass ein festgelegter
+Ausdruck die übergebene Exception wirft.
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+  expect(function() { throw new Error("error"); }).toThrow("error");
+\end{minted}
+
+\subsubsection*{Benutzerdefinierte Matchers}
+
+Um die Lesbarkeit der Specs zu verbessern, ist es mit Jasmine auch möglich eigene
+Matchers zu definieren. Eine Matcher Funktion erhält den zu vergleichenden Wert
+als \texttt{this.actual} und es können zusätzlich beliebig viele Parameter
+übergeben werden. Die benutzerdefinierten Matchers werden mit
+\texttt{this.addMatchers()} in der \texttt{beforeEach()} oder der \texttt{it()}
+Funktion definiert.
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+  beforeEach(function() {
+    this.addMatchers({
+      toBeLessOrEqualThan: function(expected) {
+        return this.actual <= expected;
+      }
+    });
+  });
+\end{minted}
+
+\subsection{Asynchrones Testen}
+
+Zum Testen von asynchronen Funktionen stellt Jasmine die Funktionen
+\texttt{runs()}, \texttt{waits()} und \texttt{waitsFor()} bereit.
+
+Von \texttt{runs()} aufgerufene Funktionen für sich alleine verhalten sich
+genauso, als wären sie direkt aufgerufen worden. In Verbindung mit
+\texttt{waits()} kann der Testablauf für eine bestimmte Zeit unterbrochen
+werden, bis die nächste \texttt{runs()} Funktion aufgerufen wird. Die
+\texttt{runs()} Blöcke innerhalb eines \texttt{it()} Blocks teilen den gleichen
+\texttt{this}-\emph{scope}.
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+  it("should increment a value after 250 ms", function() {
+    runs(function() {
+      this.value = 0;
+
+      // 250 ms in der Zukunft wird value erhöht
+      setTimeout(function() {
+        this.value++;
+      }, 250);
+    });
+
+    // value entspricht noch dem initialisierten Wert
+    runs(function() {
+      expect(this.value).toEqual(0);
+    });
+
+    waits(500);
+
+    // 500 ms später wurde value korrekt erhöht
+    runs(function() {
+      expect(this.value).toEqual(1);
+    });
+  });
+\end{minted}
+
+\texttt{waitsFor()} pausiert den Testablauf, bis ein bestimmtes Ereignis
+eintrifft. Als erster Parameter wird eine Funktion übergeben, die \texttt{true}
+im Falle des Eintreffens des Ereignisses zurück gibt. Optional kann auch die
+maximale Wartedauer und eine Fehlermeldung übergeben werden.
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+  describe('Calculation', function() {
+    it('should calculate a value asynchronously', function() {
+      var calculation = new Calculation();
+      calculation.asynchronouslyCalculateValue();
+
+      // waitsFor() wartet bis isComplete() true zurück gibt
+      // maximal aber eine Sekunde
+      waitsFor(function() {
+        return calculation.isComplete();
+      }, "calculation wasn't completed", 1000);
+
+      runs(function() {
+        expect(calculation.value).toEqual(1);
+      });
+    });
+  });
+\end{minted}
+
+\subsection{Spies}
+
+Jasmine Spies sind Test Doubles\cite{meszaros_test_2011-1}, die als Stubs, Spies, Fakes oder in Verbindung
+mit einer Expectation als Mocks agieren können. Test Doubles sind Objekte, die
+das Interface oder Verhalten eines realen Objektes simulieren und werden
+eingesetzt um die Komplexität der Tests zu reduzieren. Bei Projekten, 
+
+\subsection{Testablauf}
+
+Für Jasmine gibt es eine Stand-alone Version, deren Funktionalität der von QUnit
+entspricht. In einer HTML-Datei werden die Test-, sowie die Projektdateien
+eingebunden und beim Öffnen im Browser wird sie mit den Testergebnissen befüllt.
+
+\begin{center}
+  \includegraphics[width = 1\textwidth]{Jasmine.png}
+\end{center}
+
+Nicht erfüllte Expectations werden farblich markiert und der Stack für den
+jeweiligen Fehler wird angezeigt. Zusätzlich ist es möglich, einzelne Specs vom
+Browser aus erneut aufzurufen.
+
+Mit dem Kommandozeilen Interface von Jasmine ist es möglich automatisiert
+verschiedene Browser zu starten und die Test Suites auszuführen. Die Browser
+werden von Selenium\cite{selenium_selenium_2011} geladen und geben die
+Ergebnisse über die Kommandozeile aus.
+
+Ein Beispiel für die Server-seitige Anwendung von Jasmine ist
+jasmine-node\cite{hevery_jasmine-node_2011}, eine Adaptierung für node.js. Die
+Specs können direkt mit dem node.js Interpreter ausgeführt und ausgegeben
+werden.
+
 \section{Regression Testing}
 
 Regression Testing\cite{wikipedia_regression_2011} versucht Probleme und
@@ -432,7 +675,7 @@ Da es keine einheitliche JavaScript Implementierung gibt, sondern
 diese sich je nach Browser, Browserversion und Betriebssystem unterscheiden, ist
 die Durchführung der Testläufe problematisch.
 
-Ein Ansatz der sich derzeit in Entwicklung befindet ist
+Ein Ansatz, der sich derzeit in Entwicklung befindet, ist
 TestSwarm\cite{resig_testswarm_2011} von John Resig, dem Autor von jQuery und
 QUnit. Es handelt sich dabei um ein System, das den Code eines Projektes bei
 jedem \emph{commit} im Versionierungssystem automatisch auf verschiedenen
