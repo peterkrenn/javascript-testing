@@ -36,7 +36,11 @@
 \maketitle
 
 \begin{abstract}
-Zusammenfassung
+Durch den Einsatz von JavaScript in komplexer werdenden Web- und
+Server-Anwendungen bei einer größer werdenden Anzahl von JavaScript
+Implementierungen gewinnt JavaScript Testing an Bedeutung. Dieser Artikel stellt
+aktuelle Methoden zu Unit Testing, Behaviour Driven Development,
+Mocking/Stubbing und Regression Testing mit JavaScript vor.
 \end{abstract}
 
 \tableofcontents
@@ -120,8 +124,8 @@ ausgegeben.
 
 Diese Assertion ist \texttt{ok()} sehr ähnlich, allerdings werden die
 \texttt{actual} und \texttt{expecteded} Werte mit dem Ergebnis ausgegeben. Dadurch
-werden die Tests aussagekräftiger und \emph{debugging} einfacher.
-\texttt{equal} terminiert positiv, wenn \texttt{actual == expecteded}. 
+werden die Tests aussagekräftiger und Debugging einfacher. \texttt{equal()}
+terminiert positiv, wenn \texttt{actual == expected}. 
 
 \begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
   var actual = 1;
@@ -132,7 +136,7 @@ werden die Tests aussagekräftiger und \emph{debugging} einfacher.
 \subsubsection*{\texttt{strictEqual(actual, expected, message)}}
 
 Im Gegensatz zu \texttt{equal()} werden bei dieser Assertion die Werte
-mit \texttt{actual === expecteded} verglichen. Dieser Operator vergleicht
+mit \texttt{actual === expected} verglichen. Dieser Operator vergleicht
 zusätzlich die Typengleichheit der beiden Parameter.
 
 \begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
@@ -147,7 +151,7 @@ zusätzlich die Typengleichheit der beiden Parameter.
 
 \subsubsection*{\texttt{deepEqual(actual, expected, message)}}
 
-\texttt{deepEqual()} überprüft primitve Datentypen, Arrays und Objekte
+\texttt{deepEqual()} überprüft primitive Datentypen, Arrays und Objekte
 rekursiv auf Gleichheit. Sie ist dabei auch strikter als \texttt{equal()}, da
 der \texttt{===} Operator verwendet wird.
 
@@ -181,9 +185,8 @@ Entsprechende Funktionen existieren auch für \texttt{strictEqual()} und
 
 \subsubsection*{\texttt{raises(state, message)}}
 
-\texttt{raises()} überprüft, ob die übergebene \emph{callback} Funktion eine
-\emph{exception} wirft. Die Funktion wird ohne Parameter im \emph{default scope}
-aufgerufen.
+\texttt{raises()} überprüft, ob die übergebene Callback Funktion eine Exception
+wirft. Die Funktion wird ohne Parameter im \emph{default scope} aufgerufen.
 
 \begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
   raises(function() {
@@ -203,7 +206,7 @@ bleiben dabei überschaubar und einfach zu verstehen.
 
 QUnit macht das mit der Funktion \texttt{test(name, expected, test)}.
 \texttt{name} ist eine Bezeichnung des Tests und \texttt{test} ist eine
-Funktion, die die Assertions enthällt. \texttt{expect} ist optional und
+Funktion, die die Assertions enthält. \texttt{expect} ist optional und
 erlaubt es die Anzahl der zu erwartenden Assertions festzulegen. Dies ist
 bei asynchronen Tests von Bedeutung.
 
@@ -264,19 +267,19 @@ sich der Testablauf pausieren und fortsetzen lässt.
 \texttt{stop()} hält den Test an und nach Aufrufen der Assertion, wird
 mit \texttt{start()} wieder fortgesetzt. Da der Fall, dass \texttt{stop()} am
 Anfang eines Tests ausgeführt wird, häufig vorkommt, gibt es dafür auch ein
-spezielle Funktion names \texttt{asyncTest()}.
+spezielle Funktion namens \texttt{asyncTest()}.
 
 Wird nicht ein \texttt{setTimeout()} Aufruf sondern ein AJAX Request
 getestet, bei dem man sich nicht sicher sein kann, wann und ob die
 \emph{callback} Funktion ausgeführt wird, ist es möglich der \texttt{stop()}
-Funktion ein Intervall als Paramter mitzugeben, nachdem der Testablauf
+Funktion ein Intervall als Parameter mitzugeben, nachdem der Testablauf
 automatisch fortgesetzt wird. Der betreffende Test schlägt dabei fehl.
 
 Werden in einem Testfall mehrere zeitverzögerte Aufrufe getestet, ist es
 notwendig, \texttt{start()} manuell mit \texttt{setTimout()} ausreichend zu
-verzögern, so dass alle \emph{callbacks} ausreichend Zeit zum Terminieren haben.
+verzögern, so dass alle Callbacks ausreichend Zeit zum Terminieren haben.
 
-Um sicher zu stellen, dass alle \emph{callbacks} mit den enthaltenen
+Um sicher zu stellen, dass alle Callbacks mit den enthaltenen
 Assertions ausgeführt werden, gibt es eine \texttt{expect()} Funktion,
 der man als Parameter die zu erwartende Anzahl der Assertions übergeben
 kann.
@@ -316,8 +319,6 @@ Die Kombination von \texttt{expect()} mit \texttt{asyncTest()} ist wiederum so
 verbreitet, dass die Anzahl der zu erwartenden Assertions als zweiter
 Parameter direkt in den \texttt{asyncTest()} Aufruf verlegt werden kann.
 
-JQuery stellt dafür die Methoden \texttt{stop()} und \texttt{start()}
-
 \subsection{Testablauf}
 
 Die Ausgabe von QUnit erfolgt ausschließlich im Browser. Die Dateien
@@ -332,10 +333,10 @@ JavaScript Code und den Tests in eine HTML-Datei eingebunden werden.
       <link rel="stylesheet" href="qunit.css" type="text/css"
             media="screen" />
 
-      <!-- project file -->
+      <!-- Projekt Datei -->
       <script type="text/javascript" src="my_project.js"></script>
 
-      <!-- tests file -->
+      <!-- Datei mit den Tests -->
       <script type="text/javascript" src="my_tests.js"></script>
     </head>
     <body>
@@ -648,7 +649,7 @@ eingebauten Expectations, die bestimmen welche Aufrufe erwartet werden.
 
 \texttt{spyOn(object, methodName)} verhindert im ersten Schritt den Aufruf einer
 Funktion und zeichnet folgende Eigenschaften auf: \texttt{callCount} enthält wie
-oft die Funktion aufgerufen worde, \texttt{mostRecentCall.args} ist
+oft die Funktion aufgerufen wurde, \texttt{mostRecentCall.args} ist
 Parameter-Array des letzten Aufrufes und mit \texttt{argsForCall[]} kann man auf
 die Parameter sämtlicher Aufrufe zugreifen.
 
@@ -666,7 +667,7 @@ die Parameter sämtlicher Aufrufe zugreifen.
   // example.mostRecentCall.args: [true]
 \end{minted}
 
-Im Falle eines Aufrufes kann die Reaktion eines Spies festgelegt werden:
+Im Falle eines Aufrufes kann die Reaktion eines Spy festgelegt werden:
 
 \begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
   // ruft die originale Funktion auf
