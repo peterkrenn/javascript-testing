@@ -80,7 +80,8 @@ Testing Framework und erlaubt es verschiedene Arten von Test Doubles und Fake
 XHR Requests zu erzeugen.
 
 Der weitere Artikel wird sich vor Allem mit der Anwendung von QUnit und Jasmine
-beschäftigen.
+beschäftigen. Diese beiden Test Frameworks sind die, an denen zur Zeit am
+aktivsten entwickelt wird.
 
 \section{QUnit}
 
@@ -93,21 +94,21 @@ wurde und als JUnit\cite{gamma_junit_2011} für Java große Verbreitung fand.
 
 \subsection{Assertions}
 
-Der zentrale Bestandteil eines \emph{unit tests} ist die \emph{assertion}. Eine
-\emph{assertion} ist eine Aussage über den Zustand einer bestimmten Stelle in
+Der zentrale Bestandteil eines \emph{unit tests} ist die Assertion. Eine
+Assertion ist eine Aussage über den Zustand einer bestimmten Stelle in
 einem Programm\cite{wikipedia_assertion_2011}. Der Entwickler macht eine
 Zusicherung, dass eine bestimmte Bedingung unabhänging von den Laufzeitumständen
 immer wahr ist.
 
-QUnit stellt eine Reihe von allgemeinen \emph{assertions} zur Verfügung,
+QUnit stellt eine Reihe von allgemeinen Assertions zur Verfügung,
 die JUnit nachempfunden sind, und auch solche, die speziell an JavaScript
 und asynchrone Entwicklung angepasst sind\cite{zaefferer_qunit_2011}:
 
 \subsubsection*{\texttt{ok(state, message)}}
 
-\texttt{ok()} ist eine boolsche \emph{assertion}, die positiv terminiert, wenn der
+\texttt{ok()} ist eine boolsche Assertion, die positiv terminiert, wenn der
 erste Parameter wahr ist. Den zweiten, optionalen Parameter \texttt{message} haben alle
-\emph{assertion}-Funktionen gemein: dieser wird gemeinsam mit dem Ergebnis
+Assertion-Funktionen gemein: dieser wird gemeinsam mit dem Ergebnis
 ausgegeben.
 
 \begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
@@ -117,7 +118,7 @@ ausgegeben.
 
 \subsubsection*{\texttt{equal(actual, expecteded, message)}}
 
-Diese \emph{assertion} ist \texttt{ok()} sehr ähnlich, allerdings werden die
+Diese Assertion ist \texttt{ok()} sehr ähnlich, allerdings werden die
 \texttt{actual} und \texttt{expecteded} Werte mit dem Ergebnis ausgegeben. Dadurch
 werden die Tests aussagekräftiger und \emph{debugging} einfacher.
 \texttt{equal} terminiert positiv, wenn \texttt{actual == expecteded}. 
@@ -130,7 +131,7 @@ werden die Tests aussagekräftiger und \emph{debugging} einfacher.
 
 \subsubsection*{\texttt{strictEqual(actual, expected, message)}}
 
-Im Gegensatz zu \texttt{equal()} werden bei dieser \emph{assertion} die Werte
+Im Gegensatz zu \texttt{equal()} werden bei dieser Assertion die Werte
 mit \texttt{actual === expecteded} verglichen. Dieser Operator vergleicht
 zusätzlich die Typengleichheit der beiden Parameter.
 
@@ -165,7 +166,7 @@ der \texttt{===} Operator verwendet wird.
 
 \subsubsection*{\texttt{notEqual(actual, expected, message)}}
 
-Diese \emph{assertion} ist die invertierte Version von \texttt{equal()}.
+Diese Assertion ist die invertierte Version von \texttt{equal()}.
 Entsprechende Funktionen existieren auch für \texttt{strictEqual()} und
 \texttt{deepEqual()}: \texttt{notStrictEqual()} und \texttt{notDeepEqual}.
 
@@ -192,18 +193,18 @@ aufgerufen.
 
 \subsection{Testfunktionen}
 
-Werden die vorgestellten \emph{assertions} direkt ausgeführt, unterbrechen sie
+Werden die vorgestellten Assertions direkt ausgeführt, unterbrechen sie
 im Falle eines Fehlers den Testdurchlauf. Deswegen werden sie in Testfunktionen
 eingebettet.
 
 Es ist auch üblich, dass jede Testfunktion nur eine spezifische Eigenschaft
-testet. Dies geschieht oft mit mehreren \emph{assertions} und die Testfälle
+testet. Dies geschieht oft mit mehreren Assertions und die Testfälle
 bleiben dabei überschaubar und einfach zu verstehen.
 
 QUnit macht das mit der Funktion \texttt{test(name, expected, test)}.
 \texttt{name} ist eine Bezeichnung des Tests und \texttt{test} ist eine
-Funktion, die die \emph{assertions} enthällt. \texttt{expect} ist optional und
-erlaubt es die Anzahl der zu erwartenden \emph{assertions} festzulegen. Dies ist
+Funktion, die die Assertions enthällt. \texttt{expect} ist optional und
+erlaubt es die Anzahl der zu erwartenden Assertions festzulegen. Dies ist
 bei asynchronen Tests von Bedeutung.
 
 \begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
@@ -230,11 +231,11 @@ manuell geschehen kann.
 
 \subsection{Asynchrones Testen}
 
-Asynchrone Funktionen, wie sie bei \emph{AJAX requests} und Aufrufen von
+Asynchrone Funktionen, wie sie bei AJAX Requests und Aufrufen von
 \texttt{setTimeout()} und \texttt{setInterval()} vorkommen, können mit den
 bisher vorgestellten Methoden nicht getestet werden.
 
-Im folgenden Beispiel\cite{huang_how_2010} wird die \emph{assertion} nicht ausgeführt, da das
+Im folgenden Beispiel\cite{huang_how_2010} wird die Assertion nicht ausgeführt, da das
 Ergebnis des Testfalles zum Zeitpunkt des Aufrufens bereits feststeht.
 
 \begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
@@ -260,12 +261,12 @@ sich der Testablauf pausieren und fortsetzen lässt.
   })
 \end{minted}
 
-\texttt{stop()} hält den Test an und nach Aufrufen der \emph{assertion}, wird
+\texttt{stop()} hält den Test an und nach Aufrufen der Assertion, wird
 mit \texttt{start()} wieder fortgesetzt. Da der Fall, dass \texttt{stop()} am
 Anfang eines Tests ausgeführt wird, häufig vorkommt, gibt es dafür auch ein
 spezielle Funktion names \texttt{asyncTest()}.
 
-Wird nicht ein \texttt{setTimeout()} Aufruf sondern ein AJAX request
+Wird nicht ein \texttt{setTimeout()} Aufruf sondern ein AJAX Request
 getestet, bei dem man sich nicht sicher sein kann, wann und ob die
 \emph{callback} Funktion ausgeführt wird, ist es möglich der \texttt{stop()}
 Funktion ein Intervall als Paramter mitzugeben, nachdem der Testablauf
@@ -276,8 +277,8 @@ notwendig, \texttt{start()} manuell mit \texttt{setTimout()} ausreichend zu
 verzögern, so dass alle \emph{callbacks} ausreichend Zeit zum Terminieren haben.
 
 Um sicher zu stellen, dass alle \emph{callbacks} mit den enthaltenen
-\emph{assertions} ausgeführt werden, gibt es eine \texttt{expect()} Funktion,
-der man als Parameter die zu erwartende Anzahl der \emph{assertions} übergeben
+Assertions ausgeführt werden, gibt es eine \texttt{expect()} Funktion,
+der man als Parameter die zu erwartende Anzahl der Assertions übergeben
 kann.
 
 \begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
@@ -312,7 +313,7 @@ kann.
 \end{minted}
 
 Die Kombination von \texttt{expect()} mit \texttt{asyncTest()} ist wiederum so
-verbreitet, dass die Anzahl der zu erwartenden \emph{assertions} als zweiter
+verbreitet, dass die Anzahl der zu erwartenden Assertions als zweiter
 Parameter direkt in den \texttt{asyncTest()} Aufruf verlegt werden kann.
 
 JQuery stellt dafür die Methoden \texttt{stop()} und \texttt{start()}
@@ -356,14 +357,15 @@ Beim Ausführen der Datei im Browser befüllt QUnit die Elemente im
 \end{center}
 
 Für jeden Testfall wird die Anzahl der erfolgreichen und fehlgeschlagenen
-\emph{assertions} und auch deren Gesamtanzahl angegeben. Für fehlgeschlagene
+Assertions und auch deren Gesamtanzahl angegeben. Für fehlgeschlagene
 Tests wird dessen Position im Quellcode angezeigt.
 
 QUnit ist nur für die Verwendung im Browser ausgelegt, ein
 Kommandozeilen-basierter Aufruf der Testfälle ist nicht vorgesehen. Ein
 Versuch\cite{plee_qunit_2010} QUnit in der simulierten Browserumgebung
 Env.js\cite{resig_envjs_2011} anzuwenden, war nur begrenzt erfolgreich, da der
-Testbericht im HTML-Format ausgegeben wird.
+Testbericht im HTML-Format ausgegeben wird. Eine Alternative ist das weiter
+unten beschriebene TestSwarm Projekt.
 
 \section{Jasmine}
 
@@ -373,10 +375,6 @@ traditionellen xUnit Test Frameworks versuchen diese die Sprache, in der die
 Tests verfasst sind, einfacher und damit auch für nicht-technische
 Projektteilnehmer verständlich zu machen. BDD soll dabei helfen, die gewünschte
 \emph{software behavior} in Diskussion mit den Auftraggebern klar zu definieren.
-
-\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
-Mehr schreiben?
-\end{minted}
 
 Im Gegensatz zu seinem Vorgänger Screw.Unit\cite{sobo_screw.unit_2011} und QUnit
 ist Jasmine ein Headless Testing Framework, das heißt es benötigt keinen
@@ -394,7 +392,7 @@ sollte aussagekräftig sein, da sie im Testbericht ausgegeben wird.
 
 Expectations drücken die Erwartungen an das Verhalten eines bestimmten Teils des
 Quellcodes mittels der \texttt{expect()} Funktion aus. Sie sind vergleichbar mit
-den \emph{assertions} der xUnit Frameworks. Das gewünschte Verhalten wird durch
+den Assertions der xUnit Frameworks. Das gewünschte Verhalten wird durch
 Matchers wie \texttt{toEqual} spezifiziert:
 
 \begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
@@ -440,7 +438,7 @@ die man durch Voranstellen von \texttt{.not} erhält:
 
 \subsubsection*{\texttt{toEqual()}}
 
-Dieser Matcher entspricht der QUnit \emph{assertion} \texttt{deepEqual()} und
+Dieser Matcher entspricht der QUnit Assertion \texttt{deepEqual()} und
 kann außerdem Datumswerte und DOM-Nodes vergleichen.
 
 \begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
@@ -633,10 +631,111 @@ maximale Wartedauer und eine Fehlermeldung übergeben werden.
 
 \subsection{Spies}
 
-Jasmine Spies sind Test Doubles\cite{meszaros_test_2011-1}, die als Stubs, Spies, Fakes oder in Verbindung
-mit einer Expectation als Mocks agieren können. Test Doubles sind Objekte, die
-das Interface oder Verhalten eines realen Objektes simulieren und werden
-eingesetzt um die Komplexität der Tests zu reduzieren. Bei Projekten, 
+Jasmine Spies sind Test Doubles\cite{meszaros_test_2011-1}, die als Stubs,
+Spies oder in Verbindung mit einer Expectation als Mocks agieren können.
+Test Doubles sind Objekte, die das Interface oder Verhalten eines realen
+Objektes simulieren und werden eingesetzt um die Komplexität der Tests zu
+reduzieren. Bei Projekten, die viele verschachtelte Objekte und Module umfassen,
+macht es Sinn, sich beim Testen nur auf relevante Teile zu konzentrieren und bei
+Kommunikation nur auf die korrekte Verwendung der Interfaces zu achten. Für
+JavaScript relevante Beispiele sind asynchrone Aufrufe oder AJAX Requests.
+
+Test Stubs sind Objekte, die ausschließlich auf die für den Test notwendigen
+Aufrufe reagieren. Eine erweiterte Version sind Test Spies, sie zeichnen die
+Anzahl und Parameter der Aufrufe auf, welche später in Assertions oder
+Expectations getestet werden können. Mocks sind vordefinierte Objekte mit
+eingebauten Expectations, die bestimmen welche Aufrufe erwartet werden.
+
+\texttt{spyOn(object, methodName)} verhindert im ersten Schritt den Aufruf einer
+Funktion und zeichnet folgende Eigenschaften auf: \texttt{callCount} enthält wie
+oft die Funktion aufgerufen worde, \texttt{mostRecentCall.args} ist
+Parameter-Array des letzten Aufrufes und mit \texttt{argsForCall[]} kann man auf
+die Parameter sämtlicher Aufrufe zugreifen.
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+  // Ein Objekt, dessen Interface simuliert wird
+  var example = {
+    not: function(boolean) { return !boolean; }
+  };
+
+  // Ein Spy wird für example.not angelegt
+  spyOn(example, "not");
+  example.not(true);
+
+  // example.not.callCount: 1
+  // example.mostRecentCall.args: [true]
+\end{minted}
+
+Im Falle eines Aufrufes kann die Reaktion eines Spies festgelegt werden:
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+  // ruft die originale Funktion auf
+  spyOn(example, "not").andCallThrough();
+
+  // gibt die übergebene Werte bei Aufruf zurück
+  spyOn(example, "not").andReturn(true);
+
+  // wirft bei Aufruf eine Exception
+  spyOn(example, "not").andThrow("error");
+
+  // ruft die übergebene Funktion auf
+  spyOn(example, "not").andCallFake(function() { return true; });
+\end{minted}
+
+Mit folgenden Matchers können die Spies in Expectations verwendet werden.
+Dadurch verhalten sich die Funktionen als Mocks.
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+  spyOn(example, "not");
+  example.not(true);
+
+  expect(example.not).toHaveBeenCalled();
+  expect(example.not).not.toHaveBeenCalledWith(false);
+\end{minted}
+
+Anstatt eine bestehende Funktion zu einem Spy zu machen, ist es auch manchmal
+sinnvoll, mit \texttt{jasmine.createSpy()} ein Stub-artiges Objekt manuell zu erstellen.
+Ein Anwendungsgebiet ist das Testen von Callbacks\cite{jasmine_jasmine_2011-1}.
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+  var Klass = function() {
+  };
+
+  Klass.prototype.methodWithCallback = function(callback) {
+    return callback("example");
+  };
+
+  it("should spy on Klass#methodWithCallback", function() {
+    var callback = jasmine.createSpy();
+    new Klass().methodWithCallback(callback);
+
+    expect(callback).toHaveBeenCalledWith("example");
+  });
+\end{minted}
+
+Eine weitere Anwendung ist das Testen von AJAX Request oder asynchronen
+Funktionen, die Callbacks als Parameter verlangen. Die Request beziehungsweise
+die Funktion wird dabei nicht ausgeführt, sondern die Callback Funktion wird
+isoliert getestet.
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+  var Klass.prototype.asyncMethod = function(callback) {
+    asyncCall(callback);
+  };
+
+  it("should test async call") {
+    spyOn(Klass, 'asyncMethod');
+    var callback = jasmine.createSpy();
+
+    Klass.asyncMethod(callback);
+    expect(callback).not.toHaveBeenCalled();
+
+    // Die an asyncMethod übergebene callback Funktion
+    // wird manuell getestet
+    Klass.asyncMethod.mostRecentCall.args[0]("example");
+    expect(callback).toHaveBeenCalledWith("example");
+  });
+\end{minted}
 
 \subsection{Testablauf}
 
