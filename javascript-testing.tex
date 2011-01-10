@@ -11,6 +11,7 @@
 \setmonofont{Bitstream Vera Sans Mono}
 
 \usepackage{polyglossia}
+% \setdefaultlanguage{austrian}
 \setdefaultlanguage{german}
 
 \usepackage{minted}
@@ -45,7 +46,7 @@ Zusammenfassung
 QUnit\cite{zaefferer_qunit_2011} wird von Mitgliedern des jQuery
 Teams\cite{resig_jquery_2011} entwickelt und ist auch die offizielle
 \emph{test suite} des jQuery Projektes. Es zählt zur Gruppe der
-xUnit test frameworks\cite{fowler_xunit_2010}, die einem Design folgen,
+xUnit Test Frameworks\cite{fowler_xunit_2010}, die einem Design folgen,
 das erstmals mit SUnit\cite{beck_simple_1994} für Smalltalk formuliert
 wurde und als JUnit für Java große Verbreitung fand.
 
@@ -66,8 +67,7 @@ und asynchrone Entwicklung angepasst sind\cite{zaefferer_qunit_2011}:
 \texttt{ok()} ist eine boolsche \emph{assertion}, die positiv terminiert, wenn der
 erste Parameter wahr ist. Den zweiten, optionalen Parameter \texttt{message} haben alle
 \emph{assertion}-Funktionen gemein: dieser wird gemeinsam mit dem Ergebnis
-ausgegeben\footnote{Die QUnit Beispiel sind inspiriert von
-\cite{zaefferer_qunit_2011} und \cite{huang_how_2010}.}.
+ausgegeben.
 
 \begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
   ok(true, "terminiert immer positiv");
@@ -318,6 +318,107 @@ SCREENSHOT
 Mehr schreiben
 \end{minted}
 
+\subsection{Headless Testing}
+
+\subsection{Continuouse Integration}
+
+\section{Jasmine}
+
+Jasmine\cite{jasmine_jasmine_2011} gehört zur Gruppe der Behavior Driven
+Development\cite{wikipedia_behavior_2011} oder BDD Frameworks. Im Gegensatz zu
+traditionellen xUnit Test Frameworks versuchen diese die Sprache, in der die
+Tests verfasst sind, einfacher und damit auch für nicht-technische
+Projektteilnehmer verständlich zu machen. BDD soll dabei helfen, die gewünschte
+\emph{software behavior} in Diskussion mit den Auftraggebern klar zu definieren.
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+Mehr schreiben?
+\end{minted}
+
+Im Gegensatz zu seinem Vorgänger Screw.Unit\cite{sobo_screw.unit_2011} und QUnit
+ist Jasmine ein Headless Testing Framework, das heißt es benötigt keinen
+Browser und ist nicht von anderen JavaScript Libraries abhängig. Dies
+vereinfacht den automatisierten Aufruf der Tests und ermöglicht es Server-side
+Anwendungen zu testen. Wie QUnit unterstützt es asynchrones Testen und verfügt
+außerdem über Mocking und Stubbing Funktionalitäten.
+
+\subsection{Specs}
+
+Specs entsprechen den Testfunktionen von klassischen xUnit Test Frameworks. Sie
+beschreiben das Verhalten einer Funktion oder eines Objektes mit einem Aufruf
+der Funktion \texttt{it()} in Form einer natürlichen Sprache. Die Beschreibung
+sollte aussagekräftig sein, da sie im Test Bericht ausgegeben wird.
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+  it("should increment a variable", function() {
+    var value = 0;
+    value++;
+  });
+\end{minted}
+
+\subsection{Expectations}
+
+Expectations drücken die Erwartungen an das Verhalten eines bestimmten Teils des
+Quellcodes mittels der \texttt{expect()} Funktion aus. Sie sind vergleichbar mit
+den \emph{assertions} der xUnit Frameworks. Das Verhalten wird durch Matchers
+spezifiziert.
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+  it("should increment a variable", function() {
+    // Definition der Testdaten
+    var value = 0;
+
+    // Ausführen des zu testenden codes
+    value++;
+
+    // Testen der Erwartung
+    expect(value).toEqual(1);
+  });
+\end{minted}
+
+\subsection{Matchers}
+
+Jasmine verfügt über eine Reihe von eingebauten Matchers und deren Inversionen,
+die man durch Voranstellen von \texttt{.not} erhält:
+
+\subsubsection*{\texttt{toEqual()}}
+
+Dieser Matcher entspricht der QUnit \emph{assertion} \texttt{deepEqual()} und
+kann außerdem Datumswerte und DOM-Nodes vergleichen.
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+  // Alle expectations terminieren positiv
+  expect(true).toEqual(true);
+  expect(false).not.toEqual(true);
+
+  expect("5").not.toEqual(5);
+
+  expect({a: 1}).not.toEqual({a: "1"});
+
+  expect(new Number("5")).toEqual(5);
+
+  expect(new Date("January 11, 2011, 12:00:00"))
+    .not.toEqual(new Date("January 12, 2011, 12:30:00"));
+
+  var nodeA = document.createElement("div");
+  var nodeB = document.createElement("div");
+  expect(nodeA).toEqual(nodeA);
+  expect(nodeA).not.toEqual(nodeB);
+\end{minted}
+
+\subsubsection*{\texttt{toBe()}}
+
+\texttt{toBe()} entspricht \texttt{strictEqual()}.
+
+\begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
+  var a = {};
+  var b = {};
+  var c = b;
+
+  expect(a).not.toBe(b);
+  expect(c).toBe(b);
+\end{minted}
+
 \section{Regression Testing}
 
 Regression Testing\cite{wikipedia_regression_2011} versucht Probleme und
@@ -325,7 +426,7 @@ Nebenwirkungen von Modifikationen im Quellcode durch Wiederholung der Testfälle
 aufzuzeigen. Ein verwandter Begriff ist Continuous
 Integration\cite{wikipedia_continuous_2011}, die kontinuierliche
 Qualitätskontrolle für ein Projekt erreichen will. Automatisiertes Testing ist
-eines ihrer Ziele.
+eines ihrer Ziele. 
 
 Da es keine einheitliche JavaScript Implementierung gibt, sondern
 diese sich je nach Browser, Browserversion und Betriebssystem unterscheiden, ist
@@ -347,7 +448,6 @@ Im Gegensatz zu vergleichbaren Systemen, wie
 Selenium\cite{selenium_selenium_2011}, ist TestSwarm vom verwendeten Test
 Framework unabhängig: es werden alle im Moment gebräuchlichen Frameworks
 unterstützt.
-
 
 \begin{flushleft}
   \bibliography{javascript-testing}
