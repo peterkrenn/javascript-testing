@@ -17,7 +17,7 @@
 \usepackage{graphicx}
 
 \usepackage{minted}
-\definecolor{minted-bg}{rgb}{0.98, 0.98, 0.98}
+\definecolor{minted-bg}{rgb}{0.95, 0.95, 0.95}
 
 \setlength\parindent{0mm}
 \setlength\parskip{2mm}
@@ -28,22 +28,44 @@
 
 \usepackage[pdfborder={0 0 0 0}]{hyperref}
 
-\title{Unit-Tests für JavaScript und AJAX}
-\author{Peter Krenn}
+% \usepackage{titlesec}
+\usepackage{sectsty}
+\sectionfont{\sffamily\LARGE}
+\subsectionfont{\sffamily\Large}
 
 \begin{document}
 
-\maketitle
+\begin{titlepage}
+
+\begin{center}
+  \textsf{\textbf{\Huge Unit-Tests für JavaScript und AJAX}}\\[15cm]
+\end{center}
+
+\begin{flushright}
+  \textsf{\Large Peter Krenn}\\
+  \textsf{\href{mailto:peter.krenn@gmail.com}{peter.krenn@gmail.com}}\\
+  \textsf{0126166}\\
+  \textsf{066 534}\\[1cm]
+  \textsf{Seminar aus Multimedia}\\
+  \textsf{188 297}\\[1cm]
+  \textsf{10. Jänner 2011}
+\end{flushright}
+
+\end{titlepage}
 
 \begin{abstract}
-Durch den Einsatz von JavaScript in komplexer werdenden Web- und
-Server-Anwendungen bei einer größer werdenden Anzahl von JavaScript
-Implementierungen gewinnt JavaScript Testing an Bedeutung. Dieser Artikel stellt
-aktuelle Methoden zu Unit Testing, Behaviour Driven Development,
-Mocking/Stubbing und Regression Testing mit JavaScript vor.
+  Durch den Einsatz von JavaScript in komplexer werdenden Web- und
+  Server-Anwendungen bei einer größer werdenden Anzahl von JavaScript
+  Implementierungen gewinnt JavaScript Testing an Bedeutung. Dieser Artikel stellt
+  aktuelle Methoden zu Unit Testing, Behaviour Driven Development,
+  Mocking/Stubbing und Regression Testing mit JavaScript vor.
 \end{abstract}
 
+\addvspace{5cm}
+
 \tableofcontents
+
+\clearpage
 
 \section{Einleitung}
 
@@ -64,13 +86,13 @@ Jasmine\cite{jasmine_jasmine_2011} (MooTools) 18\%,
 YUITest\cite{yahoo_inc._yui_2011} (YUI) 6\%,
 unittest.js\cite{fuchs_unittest.js_2011} (Prototype) 5\%.
 
-Verbreitet ist weiterhin JsUnit\cite{jsunit_jsunit_2011} mit 12\%. Dieses
+JsUnit\cite{jsunit_jsunit_2011} ist weiterhin mit 12\% vertreten. Dieses
 Framework war das erste JavaScript Unit Testing Framework und die Entwicklung
 daran begann 2001, wurde aber mittlerweile eingestellt.
 
 Neben Browser-basiertem Testen gewinnt Server-seitiges Testen an Bedeutung,
 bereits 35\% der Entwickler verwenden JavaScript in einer Server Umgebung.
-Node.js beinhaltet eine Implementierung der CommonJS Assertion Testing
+Node.js beispielsweise beinhaltet eine Implementierung der CommonJS Assertion Testing
 Spezifikation\cite{node.js_node.js_2011}.
 
 Ebenfalls für Server-seitiges Testen relevant sind Headless Testing Frameworks,
@@ -80,12 +102,14 @@ werden.
 
 Auch Mocking und Stubbing Libraries wurden für JavaScript entwickelt.
 Zum Beispiel Sinon.JS\cite{johansen_sinon.js_2011} funktioniert mit jedem Unit
-Testing Framework und erlaubt es verschiedene Arten von Test Doubles und Fake
+Testing Framework und erlaubt es, verschiedene Arten von Test Doubles und Fake
 XHR Requests zu erzeugen.
 
-Der weitere Artikel wird sich vor Allem mit der Anwendung von QUnit und Jasmine
-beschäftigen. Diese beiden Test Frameworks sind die, an denen zur Zeit am
+Der weitere Artikel beschäftigt sich vor Allem mit der Anwendung von QUnit und
+Jasmine. Diese beiden Test Frameworks sind die, an denen zur Zeit am
 aktivsten entwickelt wird.
+
+\clearpage
 
 \section{QUnit}
 
@@ -120,10 +144,10 @@ ausgegeben.
   ok("", "Leerstring entspricht false, die assertion schlägt fehl");
 \end{minted}
 
-\subsubsection*{\texttt{equal(actual, expecteded, message)}}
+\subsubsection*{\texttt{equal(actual, expected, message)}}
 
 Diese Assertion ist \texttt{ok()} sehr ähnlich, allerdings werden die
-\texttt{actual} und \texttt{expecteded} Werte mit dem Ergebnis ausgegeben. Dadurch
+\texttt{actual} und \texttt{expected} Werte mit dem Ergebnis ausgegeben. Dadurch
 werden die Tests aussagekräftiger und Debugging einfacher. \texttt{equal()}
 terminiert positiv, wenn \texttt{actual == expected}. 
 
@@ -132,6 +156,8 @@ terminiert positiv, wenn \texttt{actual == expected}.
   equal(actual + 1, 2, "terminiert positiv");
   equal(actual, 2, "schlägt fehl");
 \end{minted}
+
+\clearpage
 
 \subsubsection*{\texttt{strictEqual(actual, expected, message)}}
 
@@ -172,7 +198,7 @@ der \texttt{===} Operator verwendet wird.
 
 Diese Assertion ist die invertierte Version von \texttt{equal()}.
 Entsprechende Funktionen existieren auch für \texttt{strictEqual()} und
-\texttt{deepEqual()}: \texttt{notStrictEqual()} und \texttt{notDeepEqual}.
+\texttt{deepEqual()}: \texttt{notStrictEqual()} und \texttt{notDeepEqual()}.
 
 \begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
   var actual = 0;
@@ -211,8 +237,13 @@ erlaubt es die Anzahl der zu erwartenden Assertions festzulegen. Dies ist
 bei asynchronen Tests von Bedeutung.
 
 \begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
-  Beispiel
+  test("Calculator#add()", function() {
+    equal(Calculator.add(3, 4), 7, "two positive values");
+    equal(Calculator.add(-3, 4), 7, "with a negative value");
+  });
 \end{minted}
+
+\clearpage
 
 \subsection{Test Suites}
 
@@ -222,7 +253,16 @@ und andererseits wird es auch möglich, für mehrere Testfälle relevante Daten 
 deren Ausführung zu definieren.
 
 \begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
-  Beispiel
+  module("Calculator", {
+    setup: function() {
+      this.a = 3;
+      this.b = 4;
+    }
+  });
+
+  test("add()", function() {
+    equal(Calculator.add(this.a, this.b), 7);
+  });
 \end{minted}
 
 Im Parameter \texttt{lifecycle} kann man optional die Funktionen
@@ -319,9 +359,11 @@ Die Kombination von \texttt{expect()} mit \texttt{asyncTest()} ist wiederum so
 verbreitet, dass die Anzahl der zu erwartenden Assertions als zweiter
 Parameter direkt in den \texttt{asyncTest()} Aufruf verlegt werden kann.
 
+\clearpage
+
 \subsection{Testablauf}
 
-Die Ausgabe von QUnit erfolgt ausschließlich im Browser. Die Dateien
+Die Ausgabe von QUnit erfolgt ausschließlich im Browser. Die Da\-tei\-en
 \texttt{qunit.js} und \texttt{qunit.css} müssen gemeinsam mit dem zu testenden
 JavaScript Code und den Tests in eine HTML-Datei eingebunden werden.
 
@@ -432,6 +474,8 @@ mit \texttt{beforeEach()} und \texttt{afterEach()}.
   });
 \end{minted}
 
+\clearpage
+
 \subsection{Matchers}
 
 Jasmine verfügt über eine Reihe von eingebauten Matchers und deren Inversionen,
@@ -475,6 +519,8 @@ kann außerdem Datumswerte und DOM-Nodes vergleichen.
   expect(c).toBe(b);
 \end{minted}
 
+\clearpage
+
 \subsubsection*{\texttt{toMatch()}}
 
 \texttt{toMatch()} überprüft Strings auf Übereinstimmungen mit Regulären
@@ -517,6 +563,8 @@ Diese Matchers überprüfen, ob ein Ausdruck in \texttt{true} beziehungsweise
   expect(5).toBeTruthy();
   expect({a: 1}).not.toBeFalsy();
 \end{minted}
+
+\clearpage
 
 \subsubsection*{\texttt{toContain()}}
 
@@ -606,6 +654,8 @@ werden, bis die nächste \texttt{runs()} Funktion aufgerufen wird. Die
   });
 \end{minted}
 
+\clearpage
+
 \texttt{waitsFor()} pausiert den Testablauf, bis ein bestimmtes Ereignis
 eintrifft. Als erster Parameter wird eine Funktion übergeben, die \texttt{true}
 im Falle des Eintreffens des Ereignisses zurück gibt. Optional kann auch die
@@ -684,7 +734,7 @@ Im Falle eines Aufrufes kann die Reaktion eines Spy festgelegt werden:
 \end{minted}
 
 Mit folgenden Matchers können die Spies in Expectations verwendet werden.
-Dadurch verhalten sich die Funktionen als Mocks.
+Dadurch verhalten sich die Funktionen wie Mock Objekte.
 
 \begin{minted}[gobble = 2, bgcolor = minted-bg]{javascript}
   spyOn(example, "not");
@@ -693,6 +743,8 @@ Dadurch verhalten sich die Funktionen als Mocks.
   expect(example.not).toHaveBeenCalled();
   expect(example.not).not.toHaveBeenCalledWith(false);
 \end{minted}
+
+\clearpage
 
 Anstatt eine bestehende Funktion zu einem Spy zu machen, ist es auch manchmal
 sinnvoll, mit \texttt{jasmine.createSpy()} ein Stub-artiges Objekt manuell zu erstellen.
@@ -737,6 +789,8 @@ isoliert getestet.
     expect(callback).toHaveBeenCalledWith("example");
   });
 \end{minted}
+
+\clearpage
 
 \subsection{Testablauf}
 
@@ -791,6 +845,8 @@ Im Gegensatz zu vergleichbaren Systemen, wie
 Selenium\cite{selenium_selenium_2011}, ist TestSwarm vom verwendeten Test
 Framework unabhängig: es werden alle im Moment gebräuchlichen Frameworks
 unterstützt.
+
+\clearpage
 
 \begin{flushleft}
   \bibliography{javascript-testing}
