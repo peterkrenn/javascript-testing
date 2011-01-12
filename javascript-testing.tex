@@ -90,12 +90,12 @@ JsUnit\cite{jsunit_jsunit_2011} ist weiterhin mit 12\% vertreten. Dieses
 Framework war das erste JavaScript Unit Testing Framework und die Entwicklung
 daran begann 2001, wurde aber mittlerweile eingestellt.
 
-Neben Browser-basiertem Testen gewinnt Server-seitiges Testen an Bedeutung,
+Neben browser-basiertem Testen gewinnt server-seitiges Testen an Bedeutung,
 bereits 35\% der Entwickler verwenden JavaScript in einer Server Umgebung.
 Node.js beispielsweise beinhaltet eine Implementierung der CommonJS Assertion Testing
 Spezifikation\cite{node.js_node.js_2011}.
 
-Ebenfalls für Server-seitiges Testen relevant sind Headless Testing Frameworks,
+Ebenfalls für server-seitiges Testen relevant sind Headless Testing Frameworks,
 wie zum Beispiel Jasmine. Sie sind nicht vom DOM-Modell des Browsers oder
 anderen Frameworks abhängig und können auch von der Kommandozeile aus aufgerufen
 werden.
@@ -343,7 +343,7 @@ kann.
       ok(true);
     });
 
-    ajax(function() {
+    ajaxCall(function() {
       ok(true);
       ok(true);
     })
@@ -355,9 +355,8 @@ kann.
   });
 \end{minted}
 
-Die Kombination von \texttt{expect()} mit \texttt{asyncTest()} ist wiederum so
-verbreitet, dass die Anzahl der zu erwartenden Assertions als zweiter
-Parameter direkt in den \texttt{asyncTest()} Aufruf verlegt werden kann.
+Die Anzahl der Assertions kann auch direkt im \texttt{asyncTest(name, expected,
+test)} Aufruf definiert werden.
 
 \clearpage
 
@@ -404,7 +403,7 @@ Assertions und auch deren Gesamtanzahl angegeben. Für fehlgeschlagene
 Tests wird dessen Position im Quellcode angezeigt.
 
 QUnit ist nur für die Verwendung im Browser ausgelegt, ein
-Kommandozeilen-basierter Aufruf der Testfälle ist nicht vorgesehen. Ein
+kommandozeilen-basierter Aufruf der Testfälle ist nicht vorgesehen. Ein
 Versuch\cite{plee_qunit_2010} QUnit in der simulierten Browserumgebung
 Env.js\cite{resig_envjs_2011} anzuwenden, war nur begrenzt erfolgreich, da der
 Testbericht im HTML-Format ausgegeben wird. Eine Alternative ist das weiter
@@ -422,7 +421,7 @@ Projektteilnehmer verständlich zu machen. BDD soll dabei helfen, die gewünscht
 Im Gegensatz zu seinem Vorgänger Screw.Unit\cite{sobo_screw.unit_2011} und QUnit
 ist Jasmine ein Headless Testing Framework, das heißt es benötigt keinen
 Browser und ist nicht von anderen JavaScript Libraries abhängig. Dies
-vereinfacht den automatisierten Aufruf der Tests und ermöglicht es Server-side
+vereinfacht den automatisierten Aufruf der Tests und ermöglicht es server-side
 Anwendungen zu testen. Wie QUnit unterstützt es asynchrones Testen und verfügt
 außerdem über Mocking und Stubbing Funktionalitäten.
 
@@ -794,7 +793,7 @@ isoliert getestet.
 
 \subsection{Testablauf}
 
-Für Jasmine gibt es eine Stand-alone Version, deren Funktionalität der von QUnit
+Für Jasmine gibt es eine stand-alone Version, deren Funktionalität der von QUnit
 entspricht. In einer HTML-Datei werden die Test-, sowie die Projektdateien
 eingebunden und beim Öffnen im Browser wird sie mit den Testergebnissen befüllt.
 
@@ -811,7 +810,7 @@ verschiedene Browser zu starten und die Test Suites auszuführen. Die Browser
 werden von Selenium\cite{selenium_selenium_2011} geladen und geben die
 Ergebnisse über die Kommandozeile aus.
 
-Ein Beispiel für die Server-seitige Anwendung von Jasmine ist
+Ein Beispiel für die server-seitige Anwendung von Jasmine ist
 jasmine-node\cite{hevery_jasmine-node_2011}, eine Adaptierung für node.js. Die
 Specs können direkt mit dem node.js Interpreter ausgeführt und ausgegeben
 werden.
